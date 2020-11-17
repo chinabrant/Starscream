@@ -78,7 +78,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             
             let dict = [
                 kCFStreamSSLValidatesCertificateChain: kCFBooleanFalse as Any,     // allow self-signed certificate
-                kCFStreamSSLPeerName: kCFNull as Any
+//                kCFStreamSSLPeerName: kCFNull as Any
                         ] as CFDictionary
 
             let key2 = CFStreamPropertyKey(rawValue: kCFStreamPropertySSLSettings)
