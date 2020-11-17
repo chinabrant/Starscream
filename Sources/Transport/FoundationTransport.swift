@@ -75,6 +75,15 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             let key = CFStreamPropertyKey(rawValue: kCFStreamPropertySocketSecurityLevel)
             CFReadStreamSetProperty(inStream, key, kCFStreamSocketSecurityLevelNegotiatedSSL)
             CFWriteStreamSetProperty(outStream, key, kCFStreamSocketSecurityLevelNegotiatedSSL)
+            
+            let dict = [
+                kCFStreamSSLValidatesCertificateChain: kCFBooleanFalse as Any,     // allow self-signed certificate
+                kCFStreamSSLPeerName: kCFNull as Any
+                        ] as CFDictionary
+
+            let key2 = CFStreamPropertyKey(rawValue: kCFStreamPropertySSLSettings)
+            CFReadStreamSetProperty(self.inputStream, key2, dict)
+            CFWriteStreamSetProperty(self.outputStream, key2, dict)
         }
         
         onConnect?(inStream, outStream)
