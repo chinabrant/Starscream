@@ -78,7 +78,6 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             
             let dict = [
                 kCFStreamSSLValidatesCertificateChain: kCFBooleanFalse as Any,     // allow self-signed certificate
-//                kCFStreamSSLPeerName: kCFNull as Any
                         ] as CFDictionary
 
             let key2 = CFStreamPropertyKey(rawValue: kCFStreamPropertySSLSettings)
@@ -117,6 +116,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         isOpen = false
         outputStream = nil
         inputStream = nil
+        delegate?.connectionChanged(state: .cancelled)
     }
     
     public func register(delegate: TransportEventClient) {
