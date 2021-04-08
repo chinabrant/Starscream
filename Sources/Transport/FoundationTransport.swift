@@ -98,8 +98,14 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             guard let s = self else { return }
             if !s.isOpen {
                 s.delegate?.connectionChanged(state: .failed(FoundationTransportError.timeout))
+                s.clearDelegate()
             }
         })
+    }
+    
+    private func clearDelegate() {
+        inputStream?.delegate = nil
+        outputStream?.delegate = nil
     }
     
     public func disconnect() {
@@ -193,9 +199,11 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
             }
         case .errorOccurred:
             delegate?.connectionChanged(state: .failed(aStream.streamError))
+            clearDelegate()
         case .endEncountered:
             if aStream == inputStream {
                 delegate?.connectionChanged(state: .cancelled)
+                clearDelegate()
             }
         case .openCompleted:
             if aStream == inputStream {
@@ -208,6 +216,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
                             self?.delegate?.connectionChanged(state: .connected)
                         case .failed(let error):
                             self?.delegate?.connectionChanged(state: .failed(error))
+                            clearDelegate()
                         }
                         
                     })
@@ -219,6 +228,7 @@ public class FoundationTransport: NSObject, Transport, StreamDelegate {
         case .endEncountered:
             if aStream == inputStream {
                 delegate?.connectionChanged(state: .cancelled)
+                clearDelegate()
             }
         default:
             break
